@@ -1,0 +1,15 @@
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# IntelliJ / PyCharm
+.idea/
+*.iml
+
+# Environment variables and secrets
+.env
+.env.*
