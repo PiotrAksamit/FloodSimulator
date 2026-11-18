@@ -63,11 +63,11 @@ def drawMap():
     global columns
 
     # gets map data
-    global content
+    global map_content
     colours = {"w": "blue", "l": "lime", "h": "darkgreen", "f": "darkslategrey", "s": "brown", "e": "cadetblue"}
 
     square_counter = 0
-    square_colour = content[square_counter]
+    square_colour = map_content[square_counter]
 
     for row in range(rows):
         for col in range(columns):
@@ -80,13 +80,17 @@ def drawMap():
             t.goto(x, y)
             t.pendown()
 
-            # draws square blue with black outline
+            # draws square based on index of map.txt, with black outline
             t.pencolor("black")
             t.fillcolor(colours[square_colour])
+
+            # finds last index
             if square_counter != rows * columns - 1:
                 square_counter += 1
-                square_colour = content[square_counter]
+                square_colour = map_content[square_counter]
             t.begin_fill()
+
+            # draws square
             for _ in range(4):
                 t.forward(size)
                 t.left(90)
@@ -149,10 +153,11 @@ def clicked(x, y):
     global click_position
     global fillcolour
     global mapid
+    global map_content
     click_position = (x, y)
     # print("Clicked at:", x, y)
-    print(x)
-    print(y)
+    #print(x)
+    #print(y)
 
     # detects if pressed on the coloured cells, and changes fill colour to them
     if (-165 < x < -135) & (0 - ((rows * size) / 2) - 60 < y < 0 - ((rows * size) / 2) - 30):
@@ -193,20 +198,35 @@ def clicked(x, y):
         column = math.ceil((selected_column / (size * rows)) * rows)
         row = math.ceil((selected_row / (size * columns)) * columns)
 
+        #print(row)
+        #print(column)
+
         # finds index of square
-        mapindex = (row * 15) - 15 + (column - 1)
+        mapindex = (row * columns) - columns + (column - 1)
+        print(mapindex)
 
         # print("mapindex" + str(mapindex))
         # print("mapid 2 " + mapid)
 
-        # updates map when drawn on
-        with open("map.txt", "r") as f:
-            text = f.read()
+        # turns map file into list, easily change characters
+        map_content_chars = list(map_content)
+        map_content_chars[mapindex] = mapid
+        map_content = ''.join(map_content_chars)
 
-        text = text[:mapindex] + mapid + text[mapindex + 1:]
+        print(map_content_chars)
 
-        with open("map.txt", "w") as f:
-            f.write(text)
+        # takes map_content string and writes it to the file, with newline chars
+        with open("map.txt", "w") as file:
+            for i in range(rows):
+                line = map_content[i * columns:(i + 1) * columns]
+                file.write(line + "\n")
+
+
+
+
+
+
+
 
         # calls painting turtle
         t = paint_turtle
@@ -245,11 +265,14 @@ def clicked(x, y):
 # sets map dimensions
 size = 20
 rows = 10
-columns = 15
+columns = 12
 
-# opens file and sets data as "content"
+
+# opens file and sets data as "map_content"
 with open("map.txt", "r", encoding="utf-8") as file:
-    content = file.read().replace("\n", "")
+    map_content = file.read().replace("\n", "")
+
+print(map_content)
 
 #print(content[149])
 
