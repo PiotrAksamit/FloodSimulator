@@ -263,9 +263,9 @@ def clicked(x, y):
 
 
 # sets map dimensions
-size = 20
-rows = 10
-columns = 12
+size = 15
+rows = 30
+columns = 40
 
 
 # opens file and sets data as "map_content"
